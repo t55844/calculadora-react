@@ -2,21 +2,50 @@ import React, { useState } from "react";
 import Button from "../components/Button/Button";
 import Display from "../components/Display/Display";
 import './Calculator.css'
+import { whichOperation } from "./CalculatorHelp";
 
 export default()=>{
     const [displayValue,setDisplayValue] = useState('')
+    const [firstNumber,setFirstNumber] = useState('')
+    const [secondNumber,setSecondNumber] = useState('')
+    const [inOperation,setInOperation] = useState(false)
+    const [currentOperator,setCurrentOperator] = useState('')
     
     function clearMemory(){
         setDisplayValue('')
+        setFirstNumber('')
+        setSecondNumber('')
+        setInOperation(false)
     }
     function selectOperation(operation){
-        console.log(operation)
+        setInOperation(true)
+        setDisplayValue('')
+        if(operation != '='){
+            setCurrentOperator(operation)
+        }else{
+            const result = whichOperation(currentOperator,firstNumber,secondNumber)
+            setDisplayValue(result)
+        }
+        
+
+        
     }
     function addDigit(digito){
         if (digito === '.' && displayValue.includes('.')){
             return
+        }else{
+             if(inOperation === false){
+                 const numero = displayValue.concat(digito)
+                 setDisplayValue(numero)
+                 setFirstNumber(numero)
+             }else{
+                setDisplayValue('')
+                const numero = displayValue.concat(digito)
+                setDisplayValue(numero)
+                setSecondNumber(numero)
+             }
+      
         }
-        setDisplayValue(displayValue.concat(digito))        
     }
     return(
         <div className="calculator">
